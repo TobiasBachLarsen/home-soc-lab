@@ -27,7 +27,15 @@ wazuh-docker quickstart, with default demo credentials replaced.
    Put the `admin` hash under `admin:` and the `kibanaserver` hash under
    `kibanaserver:`.
 
-4. Start the stack:
+4. `config/wazuh_dashboard/wazuh.yml` also holds the API password (the
+   dashboard's Wazuh plugin reads it directly, not through `.env`), so it's
+   gitignored. Build it from the example before first start:
+   ```
+   sed "s/\${API_PASSWORD}/your-api-password/" \
+     config/wazuh_dashboard/wazuh.yml.example > config/wazuh_dashboard/wazuh.yml
+   ```
+
+5. Start the stack:
    ```
    sysctl -w vm.max_map_count=262144
    docker compose up -d
@@ -35,3 +43,14 @@ wazuh-docker quickstart, with default demo credentials replaced.
 
 Dashboard is on port 443 (not exposed publicly here, reached over an SSH
 tunnel). Manager API is on 55000.
+
+## Known limitations
+
+- The unused demo accounts (`kibanaro`, `logstash`, `readall`,
+  `snapshotrestore`) are removed from `internal_users.yml` rather than just
+  password-rotated, since nothing in this stack uses them.
+- `wazuh.indexer.yml` disables transport-layer hostname verification
+  (`enforce_hostname_verification: false`). That's inherited unchanged from
+  Wazuh's own single-node quickstart: with one node there's nothing else to
+  verify a hostname against. It would need revisiting for a multi-node
+  cluster.
