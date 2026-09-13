@@ -1,0 +1,22 @@
+services:
+  target:
+    build:
+      context: ./target
+      args:
+        WAZUH_MANAGER: wazuh.manager
+    hostname: target
+    container_name: target
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    networks:
+      - wazuh_default
+    volumes:
+      - suricata_logs:/var/log/suricata
+
+networks:
+  wazuh_default:
+    external: true
+
+volumes:
+  suricata_logs:
