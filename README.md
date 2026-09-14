@@ -1,10 +1,11 @@
 # Home SOC Lab
 
 Status: both detection scenarios below are working end to end, with
-screenshots and an explanation of why each alert fires. Demo recording
-still to come.
+screenshots and an explanation of why each alert fires.
 
 A small, self-contained lab for practicing blue-team / SOC-analyst work: generating attack traffic against a test target and detecting it with a real SIEM, instead of only completing guided platform exercises.
+
+![Demo](docs/demo.gif)
 
 ## Stack
 
