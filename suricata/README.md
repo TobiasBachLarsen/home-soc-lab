@@ -22,7 +22,7 @@ command to pick up rule updates later.
 
 Emerging Threats Open (the ruleset `suricata-update` pulls by default) is
 built around known tool/traffic fingerprints, not a generic port-scan
-detector — a plain Nmap SYN scan against a host with only one open port
+detector: a plain Nmap SYN scan against a host with only one open port
 didn't match anything in it during testing. `local.rules` adds one rule
 using Suricata's own `threshold` keyword (a built-in feature, not a custom
 detection engine) to flag many SYNs from one source in a short window.

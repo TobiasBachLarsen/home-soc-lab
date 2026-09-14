@@ -1,0 +1,8 @@
+# Only used for the OSINT triage exercise below: temporarily exposes the
+# target's SSH port on the host so an attempt against it comes from a real
+# public IP instead of the internal docker network. Not part of the default
+# stack; see triage/README.md before using this.
+services:
+  target:
+    ports:
+      - "2222:22"
