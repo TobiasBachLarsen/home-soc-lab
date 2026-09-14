@@ -1,0 +1,41 @@
+services:
+  target:
+    build:
+      context: ./target
+      args:
+        WAZUH_MANAGER: wazuh.manager
+    hostname: target
+    container_name: target
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    networks:
+      - wazuh_default
+    volumes:
+      - suricata_logs:/var/log/suricata
+
+  suricata:
+    image: jasonish/suricata:latest
+    container_name: suricata
+    network_mode: "service:target"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_NICE
+    depends_on:
+      - target
+    volumes:
+      - suricata_config:/etc/suricata
+      - suricata_rules:/var/lib/suricata
+      - suricata_logs:/var/log/suricata
+      - ./suricata/local.rules:/etc/suricata/local.rules
+    command: ["-i", "eth0"]
+
+networks:
+  wazuh_default:
+    external: true
+
+volumes:
+  suricata_logs:
+  suricata_config:
+  suricata_rules:

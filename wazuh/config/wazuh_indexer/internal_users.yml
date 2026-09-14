@@ -1,0 +1,26 @@
+---
+# This is the internal user database
+# The hash value is a bcrypt hash and can be generated with plugin/tools/hash.sh
+
+_meta:
+  type: "internalusers"
+  config_version: 2
+
+# Define your internal users here
+
+## Demo users
+
+admin:
+  hash: "$2y$12$5KtCatr.KLMG7PQ1ri9MWudx0yJRethEQLu1alSiv/yTgomC/fUqi"
+  reserved: true
+  backend_roles:
+  - "admin"
+  description: "Admin user"
+
+kibanaserver:
+  hash: "$2y$12$inXMplYcbnXF/9ixH4Ye5.52H0M6M/p6nxkXrX3Qesl..vdVwElwy"
+  reserved: true
+  description: "Kibanaserver user"
+
+# kibanaro, logstash, readall and snapshotrestore demo users removed —
+# unused in this lab, no reason to keep known-default credentials around.
