@@ -1,0 +1,4 @@
+# Emerging Threats Open doesn't ship a generic port-scan signature (it's
+# built around known tool/traffic fingerprints), so scan detection needs
+# one local rule using Suricata's own threshold mechanism.
+alert tcp any any -> $HOME_NET any (msg:"LOCAL SCAN Possible port scan detected"; flags:S; threshold: type both, track by_src, count 20, seconds 10; classtype:attempted-recon; sid:9000001; rev:1;)
