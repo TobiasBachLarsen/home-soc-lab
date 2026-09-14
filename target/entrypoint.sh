@@ -8,6 +8,7 @@ mkdir -p /var/log/suricata
 touch /var/log/suricata/eve.json
 chmod 666 /var/log/suricata/eve.json
 
+rm -f /run/rsyslogd.pid
 rsyslogd
 
 grep -q '/var/log/auth.log' /var/ossec/etc/ossec.conf || cat >> /var/ossec/etc/ossec.conf << 'EOF'

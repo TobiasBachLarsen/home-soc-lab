@@ -9,13 +9,13 @@ A small, self-contained lab for practicing blue-team / SOC-analyst work: generat
 
 ## Stack
 
-- **Wazuh** (manager + indexer + dashboard), official single-node Docker quickstart — [wazuh/](wazuh/)
-- **Target container**: Ubuntu with OpenSSH (weak, deliberately breakable credentials) and a Wazuh agent — [target/](target/)
-- **Suricata**, sharing the target's network namespace, feeding alerts to Wazuh through its built-in Suricata integration — [suricata/](suricata/)
+- **Wazuh** (manager + indexer + dashboard), official single-node Docker quickstart: [wazuh/](wazuh/)
+- **Target container**: Ubuntu with OpenSSH (weak, deliberately breakable credentials) and a Wazuh agent: [target/](target/)
+- **Suricata**, sharing the target's network namespace, feeding alerts to Wazuh through its built-in Suricata integration: [suricata/](suricata/)
 - **Attacker tooling**: Hydra and Nmap, run against the target from outside its network namespace
 
 Built and run on a throwaway cloud VM during development (snapshotted and
-torn down between sessions), not a permanently hosted box — see the
+torn down between sessions), not a permanently hosted box; see the
 project brief for why. Local-only would also work; this repo doesn't
 assume either.
 
@@ -35,14 +35,14 @@ shows the two separate bursts of activity.
 `labuser` account, which has a deliberately weak password.
 
 **Why it fired:** the target's Wazuh agent tails `/var/log/auth.log`
-(this needed adding by hand — Wazuh's default agent config doesn't watch
+(this needed adding by hand; Wazuh's default agent config doesn't watch
 it out of the box; see [target/entrypoint.sh](target/entrypoint.sh)).
 Each failed attempt is logged by PAM/sshd, and Wazuh's built-in decoders
-match it against rule 5760 (`sshd: authentication failed`, level 5) —
+match it against rule 5760 (`sshd: authentication failed`, level 5);
 that fires once per attempt. The alert above, rule **5763**
 (`sshd: brute force trying to get access to the system`, level **10**),
 is a correlation rule: it only fires once enough 5760s land from the
-same source inside its time window. That distinction matters — a single
+same source inside its time window. That distinction matters: a single
 failed login isn't an incident, a burst of them from one source is, and
 Wazuh's stock ruleset already draws that line without any custom rule.
 
@@ -58,14 +58,22 @@ sees every packet on `eth0`. The free Emerging Threats Open ruleset
 (pulled via `suricata-update`) is built around known tool/traffic
 fingerprints, not a generic scan detector, so a plain SYN scan against a
 single-service host didn't match anything in it during testing. One
-local rule was added using Suricata's own `threshold` keyword — a
-built-in feature, not custom detection logic — to flag many SYN packets
+local rule was added using Suricata's own `threshold` keyword (a
+built-in feature, not custom detection logic) to flag many SYN packets
 from one source in a short window (see
 [suricata/local.rules](suricata/local.rules) and
 [suricata/README.md](suricata/README.md)). When that rule fires, Suricata
 writes the alert to `eve.json`, which the target's Wazuh agent also
 tails; Wazuh decodes it with its built-in Suricata integration
 (rule **86601**), no custom Wazuh-side rule needed.
+
+## Triage
+
+Detection is only the first half. [triage/](triage/) documents the next
+step: pulling the source IP out of the SSH brute-force alert and running
+it through a free OSINT lookup (geolocation, ISP/ASN, proxy/hosting
+flags) to decide how to actually respond to it, the way an analyst
+would.
 
 ## Why
 
