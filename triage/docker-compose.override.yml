@@ -1,7 +1,11 @@
-# Only used for the OSINT triage exercise below: temporarily exposes the
-# target's SSH port on the host so an attempt against it comes from a real
-# public IP instead of the internal docker network. Not part of the default
-# stack; see triage/README.md before using this.
+# Only used for the OSINT triage exercise: temporarily exposes the target's
+# weak-credential SSH port on the host so an attempt against it comes from a
+# real public IP instead of the internal docker network. Not part of the
+# default stack.
+#
+# DO NOT bring this up without also restricting the port at the firewall to
+# one known IP first (see triage/README.md) — without that, this publishes a
+# deliberately weak-credential SSH server to the whole internet.
 services:
   target:
     ports:
