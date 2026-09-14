@@ -4,7 +4,7 @@ ARG WAZUH_MANAGER=wazuh.manager
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-      openssh-server curl gnupg lsb-release ca-certificates && \
+      openssh-server rsyslog curl gnupg lsb-release ca-certificates && \
     mkdir -p /var/run/sshd /var/log
 
 # Deliberately weak login for the brute-force scenario.
